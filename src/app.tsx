@@ -1,12 +1,20 @@
 import React from 'react';
-import {History} from 'history';
+import { createBrowserHistory } from 'history';
+import useMicroapps from './hooks/use-microapp';
 
-type PropsType = {
-    history: History;
-};
+const history = createBrowserHistory()
+
+type PropsType = {}
 
 const App: React.FC<PropsType> = (props: PropsType) => {
-    return <h1>Boilerplate running!</h1>;
+    const microapps = useMicroapps();
+
+    return (
+        <div>
+            <header>Container</header>
+            <main id="microapp-container"></main>
+        </div>
+    )
 };
 
 export default App;

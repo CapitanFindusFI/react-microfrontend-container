@@ -20,7 +20,7 @@ const webpackConfiguration = (): Configuration => ({
                 options: {
                     transpileOnly: true,
                 },
-                exclude: '/dist/',
+                exclude: /node_modules/,
             },
         ],
     },

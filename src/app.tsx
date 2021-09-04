@@ -1,6 +1,8 @@
 import React from 'react';
 import {createBrowserHistory} from 'history';
 import useMicroapps from './hooks/use-microapp';
+import {MicroApp} from './types';
+import MicroappContainer from './components/microapp-container';
 
 const history = createBrowserHistory();
 
@@ -14,7 +16,15 @@ const App: React.FC<PropsType> = (props: PropsType) => {
     ) : (
         <div>
             <header>Container</header>
-            <main id="microapp-container"></main>
+            <main>
+                {microapps.map((item: MicroApp, index: number) => (
+                    <MicroappContainer
+                        history={history}
+                        app={item}
+                        key={index}
+                    />
+                ))}
+            </main>
         </div>
     );
 };

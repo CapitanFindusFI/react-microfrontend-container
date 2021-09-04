@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 import {useState} from 'react';
-import {MicroApp} from './../types/microapp';
+import {MicroApp} from '../types';
 
 type HookReturnType = [MicroApp[], boolean];
 
@@ -9,9 +9,7 @@ const useMicroapps = (manifest: string = 'manifest.json'): HookReturnType => {
     const [hasError, setHasError] = useState<boolean>(false);
 
     useEffect(() => {
-        fetch(manifest, {
-            method: 'GET',
-        })
+        fetch(manifest, {method: 'GET'})
             .then((res) => res.json())
             .then((response: MicroApp[]) => {
                 setMicroapps(response);

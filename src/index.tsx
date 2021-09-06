@@ -1,14 +1,11 @@
-import {createBrowserHistory} from 'history';
 import React, {StrictMode} from 'react';
 import ReactDOM from 'react-dom';
 import App from './app';
 
-const history = createBrowserHistory();
-
 const mountApplication = (containerId = 'react-app'): void => {
     ReactDOM.render(
         <StrictMode>
-            <App history={history} />
+            <App />
         </StrictMode>,
         document.getElementById(containerId),
     );

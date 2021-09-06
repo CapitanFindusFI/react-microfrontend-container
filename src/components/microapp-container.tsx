@@ -1,16 +1,14 @@
 import React, {useEffect} from 'react';
-import {History} from 'history';
 import {MicroApp} from '../types';
 import useMicroapp from '../hooks/use-microapp';
+import {RouteComponentProps, withRouter} from 'react-router';
 
-type PropsType = {
-    history: History;
+type PropsType = RouteComponentProps & {
     app: MicroApp;
 };
 
-const MicroappContainer: React.FC<PropsType> = (props: PropsType) => {
-    const {history, app} = props;
-    const {name, host} = app;
+const MicroappContainer: React.FC<PropsType> = ({history, app}: PropsType) => {
+    const {name, host, basepath} = app;
 
     const [microApp, containerId] = useMicroapp({name, host});
 
@@ -18,10 +16,14 @@ const MicroappContainer: React.FC<PropsType> = (props: PropsType) => {
         if (!microApp) {
             return null;
         }
-        microApp.mount(containerId, history);
+        microApp.mount(containerId, history, basepath);
+
+        return () => {
+            microApp.unmount(containerId);
+        };
     });
 
     return <div id={containerId} />;
 };
 
-export default MicroappContainer;
+export default withRouter<PropsType, React.FC<PropsType>>(MicroappContainer);

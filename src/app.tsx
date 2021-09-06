@@ -1,54 +1,33 @@
-import React, {useEffect, useState} from 'react';
-import {History, createBrowserHistory} from 'history';
-import {MicroApp} from './types';
-import MicroappContainer from './components/microapp-container';
+import React from 'react';
+import AppRoutes from './app-routes';
+import {BrowserRouter, useHistory} from 'react-router-dom';
+import useAppManifest from './hooks/use-manifest';
 
-const useAppManifest = (path = 'manifest.json'): [MicroApp[], boolean] => {
-    const [microapps, setMicroapps] = useState<MicroApp[]>([]);
-    const [loadError, setLoadError] = useState<boolean>(false);
+const AppHeader: React.FC = () => {
+    const history = useHistory();
 
-    useEffect(() => {
-        fetch(path, {
-            method: 'GET',
-            mode: 'no-cors',
-        })
-            .then((res) => res.json())
-            .then((apps: MicroApp[]) => {
-                setMicroapps(apps);
-            })
-            .catch((err: any) => {
-                console.error(err);
-                setLoadError(true);
-            });
-    }, [path]);
+    const _window = window as any;
+    _window.microapps = _window.microapps || {};
+    _window.microapps.history = history;
 
-    return [microapps, loadError];
+    return (
+        <header>
+            <h2>Application header</h2>
+            <h4>Current route: {history.location.pathname}</h4>
+        </header>
+    );
 };
 
-type PropsType = {
-    history: History;
-};
-
-const App: React.FC<PropsType> = ({
-    history = createBrowserHistory(),
-}: PropsType) => {
+const App: React.FC = () => {
     const [microapps, loadError] = useAppManifest();
 
     return loadError ? (
         <h1>Unable to load</h1>
     ) : (
-        <main>
-            <header>Container</header>
-            <div>
-                {microapps.map((item: MicroApp, index: number) => (
-                    <MicroappContainer
-                        history={history}
-                        app={item}
-                        key={index}
-                    />
-                ))}
-            </div>
-        </main>
+        <BrowserRouter>
+            <AppHeader />
+            <AppRoutes apps={microapps} />
+        </BrowserRouter>
     );
 };
 

@@ -1,7 +1,7 @@
 [{
     "name": "test-microapp-1",
     "host": "http://localhost:9998",
-    "basepath": "/",
+    "basepath": "/test-app-1",
     "mount": "mountApplication",
     "unmount": "unmountApplication"
 }]

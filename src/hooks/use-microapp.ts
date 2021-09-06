@@ -1,25 +1,59 @@
-import {useEffect} from 'react';
-import {useState} from 'react';
-import {MicroApp} from '../types';
+import {MicroApp} from './../types/index';
+import {useState, useEffect} from 'react';
 
-type HookReturnType = [MicroApp[], boolean];
+type HookReturnType = [MicroApp, string];
 
-const useMicroapps = (manifest = 'manifest.json'): HookReturnType => {
-    const [microapps, setMicroapps] = useState<MicroApp[]>([]);
-    const [hasError, setHasError] = useState<boolean>(false);
-
-    useEffect(() => {
-        fetch(manifest, {method: 'GET'})
-            .then((res) => res.json())
-            .then((response: MicroApp[]) => {
-                setMicroapps(response);
-            })
-            .catch((error: any) => {
-                setHasError(true);
-            });
-    }, [manifest]);
-
-    return [microapps, hasError];
+type HookParamsType = {
+    host: string;
+    name: string;
 };
 
-export default useMicroapps;
+const useMicroapp = ({host, name}: HookParamsType): HookReturnType => {
+    const [microApp, setMicroApp] = useState<MicroApp>(null);
+
+    const scriptTagId = `microapp-${name}-handle`;
+    const entrypointTagId = `microapp-${name}-entrypoint`;
+
+    useEffect(() => {
+        const setupApplication = () => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const _window = window as any;
+            if (!_window.microapps) {
+                throw new Error('No microapps loaded');
+            }
+
+            const _app = _window.microapps[name];
+            if (_app) {
+                setMicroApp(_app);
+            } else {
+                const _tmp = _window.microapps.tmp;
+                if (_tmp) {
+                    _window.microapps[name] = _tmp;
+                    delete _window.microapps.tmp;
+
+                    const loadingApp = _window.microapps[name];
+                    setMicroApp(loadingApp);
+                }
+            }
+        };
+
+        if (document.getElementById(scriptTagId)) {
+            setupApplication();
+            return;
+        }
+
+        const scriptTag = document.createElement('script');
+        scriptTag.id = scriptTagId;
+        scriptTag.src = `${host}/build.js`;
+        scriptTag.type = 'application/javascript';
+        scriptTag.onload = () => {
+            setupApplication();
+        };
+
+        document.body.appendChild(scriptTag);
+    }, []);
+
+    return [microApp, entrypointTagId];
+};
+
+export default useMicroapp;

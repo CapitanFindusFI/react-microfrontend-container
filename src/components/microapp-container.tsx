@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {History} from 'history';
 import {MicroApp} from '../types';
 
@@ -8,19 +8,34 @@ type PropsType = {
 };
 
 const MicroappContainer: React.FC<PropsType> = (props: PropsType) => {
-    const [isMounted, setIsMounted] = useState<boolean>(false);
-
     const {history, app} = props;
-    const {name, host, mount, unmount} = app;
+    const {name, host} = app;
 
     const scriptUrl = `${host}/build.js`;
     const scriptTagId = `microapp-${name}-handle`;
     const entrypointTagId = `microapp-${name}-entrypoint`;
 
+    const onAppLoaded = () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const _window = window as any;
+        if (!_window.microapps) {
+            throw new Error('No microapps loaded');
+        }
+
+        const _tmp = _window.microapps.tmp;
+        if (_tmp) {
+            _window.microapps[name] = _tmp;
+            delete _window.microapps.tmp;
+
+            const loadingApp = _window.microapps[name];
+            loadingApp.mount(entrypointTagId, history);
+        }
+    };
+
     useEffect(() => {
         const scriptTag = document.getElementById(scriptTagId);
         if (scriptTag) {
-            setIsMounted(true);
+            onAppLoaded();
         } else {
             const tag = document.createElement('script');
             tag.src = `${host}/build.js`;
@@ -28,16 +43,14 @@ const MicroappContainer: React.FC<PropsType> = (props: PropsType) => {
             tag.type = 'application/javascript';
             tag.src = scriptUrl;
             tag.onload = () => {
-                setIsMounted(true);
-                mount(entrypointTagId, history);
-                console.log((window as any).microapps);
-            }
+                onAppLoaded();
+            };
 
             document.body.appendChild(tag);
         }
     }, []);
 
-    return !isMounted ? <h2>Loading</h2> : <div id={entrypointTagId}></div>;
+    return <div id={entrypointTagId}></div>;
 };
 
 export default MicroappContainer;

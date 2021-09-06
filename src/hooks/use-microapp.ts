@@ -4,7 +4,7 @@ import {MicroApp} from '../types';
 
 type HookReturnType = [MicroApp[], boolean];
 
-const useMicroapps = (manifest: string = 'manifest.json'): HookReturnType => {
+const useMicroapps = (manifest = 'manifest.json'): HookReturnType => {
     const [microapps, setMicroapps] = useState<MicroApp[]>([]);
     const [hasError, setHasError] = useState<boolean>(false);
 

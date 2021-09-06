@@ -6,9 +6,7 @@ import MicroappContainer from './components/microapp-container';
 
 const history = createBrowserHistory();
 
-type PropsType = {};
-
-const App: React.FC<PropsType> = (props: PropsType) => {
+const App: React.FC = () => {
     const [microapps, loadError] = useMicroapps();
 
     return loadError ? (

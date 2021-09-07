@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useLayoutEffect} from 'react';
 import {MicroApp} from '../types';
 import useMicroapp from '../hooks/use-microapp';
 import {RouteComponentProps, withRouter} from 'react-router';
@@ -12,14 +12,15 @@ const MicroappContainer: React.FC<PropsType> = ({history, app}: PropsType) => {
 
     const [microApp, containerId] = useMicroapp({name, host});
 
-    useEffect(() => {
-        if (!microApp) {
-            return null;
+    useLayoutEffect(() => {
+        if (microApp) {
+            microApp.mount(containerId, history, basepath);
         }
-        microApp.mount(containerId, history, basepath);
 
         return () => {
-            microApp.unmount(containerId);
+            if (microApp) {
+                microApp.unmount(containerId);
+            }
         };
     });
 

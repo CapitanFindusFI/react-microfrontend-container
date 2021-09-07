@@ -51,7 +51,7 @@ const useMicroapp = ({host, name}: HookParamsType): HookReturnType => {
         };
 
         document.body.appendChild(scriptTag);
-    }, []);
+    }, [host, name, scriptTagId]);
 
     return [microApp, entrypointTagId];
 };

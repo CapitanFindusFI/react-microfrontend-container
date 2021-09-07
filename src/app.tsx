@@ -1,19 +1,27 @@
 import React from 'react';
 import AppRoutes from './app-routes';
-import {BrowserRouter, useHistory} from 'react-router-dom';
+import {BrowserRouter, Link, useLocation} from 'react-router-dom';
 import useAppManifest from './hooks/use-manifest';
+import {MicroApp} from './types';
 
-const AppHeader: React.FC = () => {
-    const history = useHistory();
+type HeaderPropsType = {
+    apps: MicroApp[];
+};
 
-    const _window = window as any;
-    _window.microapps = _window.microapps || {};
-    _window.microapps.history = history;
+const AppHeader: React.FC<HeaderPropsType> = ({apps}) => {
+    const location = useLocation();
 
     return (
         <header>
             <h2>Application header</h2>
-            <h4>Current route: {history.location.pathname}</h4>
+            <h4>Current route: {location.pathname}</h4>
+            <div>
+                {apps.map((app: MicroApp, index: number) => (
+                    <Link to={app.basepath} key={index}>
+                        {app.name}
+                    </Link>
+                ))}
+            </div>
         </header>
     );
 };
@@ -25,7 +33,7 @@ const App: React.FC = () => {
         <h1>Unable to load</h1>
     ) : (
         <BrowserRouter>
-            <AppHeader />
+            <AppHeader apps={microapps} />
             <AppRoutes apps={microapps} />
         </BrowserRouter>
     );

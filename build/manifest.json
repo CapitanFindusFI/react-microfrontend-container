@@ -1,7 +1,23 @@
-[{
-    "name": "test-microapp-1",
-    "host": "http://localhost:9998",
-    "basepath": "/test-app-1",
-    "mount": "mountApplication",
-    "unmount": "unmountApplication"
-}]
+[
+    {
+        "name": "test-microapp-1",
+        "host": "http://localhost:9998",
+        "basepath": "/test-app-1",
+        "mount": "mountApplication",
+        "unmount": "unmountApplication"
+    },
+    {
+        "name": "test-microapp-2",
+        "host": "http://localhost:9998",
+        "basepath": "/test-app-2",
+        "mount": "mountApplication",
+        "unmount": "unmountApplication"
+    },
+    {
+        "name": "test-microapp-3",
+        "host": "http://localhost:9998",
+        "basepath": "/test-app-3",
+        "mount": "mountApplication",
+        "unmount": "unmountApplication"
+    }
+]

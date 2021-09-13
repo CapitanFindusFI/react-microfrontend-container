@@ -19,20 +19,20 @@ const useMicroapp = ({host, name}: HookParamsType): HookReturnType => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const _window = window as any;
             if (!_window.microapps) {
-                throw new Error('No microapps loaded');
-            }
-
-            const _app = _window.microapps[name];
-            if (_app) {
-                setMicroApp(_app);
+                console.log('There are no microapps to be loaded');
             } else {
-                const _tmp = _window.microapps.tmp;
-                if (_tmp) {
-                    _window.microapps[name] = _tmp;
-                    delete _window.microapps.tmp;
+                const _app = _window.microapps[name];
+                if (_app) {
+                    setMicroApp(_app);
+                } else {
+                    const _tmp = _window.microapps.tmp;
+                    if (_tmp) {
+                        _window.microapps[name] = _tmp;
+                        delete _window.microapps.tmp;
 
-                    const loadingApp = _window.microapps[name];
-                    setMicroApp(loadingApp);
+                        const loadingApp = _window.microapps[name];
+                        setMicroApp(loadingApp);
+                    }
                 }
             }
         };

@@ -14,7 +14,7 @@ const useAppManifest = (path = 'manifest.json'): [MicroApp[], boolean] => {
             .then((apps: MicroApp[]) => {
                 setMicroapps(apps);
             })
-            .catch((err: any) => {
+            .catch((err: unknown) => {
                 console.error(err);
                 setLoadError(true);
             });

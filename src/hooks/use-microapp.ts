@@ -6,12 +6,14 @@ type HookReturnType = [MicroApp, string];
 type HookParamsType = {
     host: string;
     name: string;
+    filename?: string;
 };
 
-const useMicroapp = (
-    {host, name}: HookParamsType,
+const useMicroapp = ({
+    host,
+    name,
     filename = 'build.js',
-): HookReturnType => {
+}: HookParamsType): HookReturnType => {
     const [microApp, setMicroApp] = useState<MicroApp>(null);
 
     const scriptTagId = `microapp-${name}-handle`;

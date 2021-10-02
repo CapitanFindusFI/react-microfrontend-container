@@ -8,7 +8,10 @@ type HookParamsType = {
     name: string;
 };
 
-const useMicroapp = ({host, name}: HookParamsType): HookReturnType => {
+const useMicroapp = (
+    {host, name}: HookParamsType,
+    filename = 'build.js',
+): HookReturnType => {
     const [microApp, setMicroApp] = useState<MicroApp>(null);
 
     const scriptTagId = `microapp-${name}-handle`;
@@ -44,14 +47,14 @@ const useMicroapp = ({host, name}: HookParamsType): HookReturnType => {
 
         const scriptTag = document.createElement('script');
         scriptTag.id = scriptTagId;
-        scriptTag.src = `${host}/build.js`;
+        scriptTag.src = `${host}/${filename}`;
         scriptTag.type = 'application/javascript';
         scriptTag.onload = () => {
             setupApplication();
         };
 
         document.body.appendChild(scriptTag);
-    }, [host, name, scriptTagId]);
+    }, [host, name, filename, scriptTagId]);
 
     return [microApp, entrypointTagId];
 };

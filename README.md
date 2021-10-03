@@ -20,6 +20,7 @@ type MicroApp = {
     name: string;
     host: string;
     basepath?: string;
+    filename?: string;
     mount: (container: string, history: History, basepath?: string) => void;
     unmount: (container: string) => void;
 };
@@ -29,6 +30,7 @@ described as following:
 - `name` is an identifier name, which will be used for the `<script/>` tag ID and the microfrontend ReactDOM root element ID;
 - `host` is the HTTP url in which the `.js` file is located;
 - `basepath` is the main React router basepath for this microfrontend;
+- `filename` is the name of the `.js` file. It needs to be with the `.js` extension. Default: `build.js`;
 - `mount` (defaults to `mountApplication`) is the exposed function name to be called when creating the microfrontend, which will take care of mounting react application (passing `basepath` will ensure its routes will be correct);
 - `unmount` (defaults to `unmountApplication`) is the exposed function name to be called when unmounting the microfrontend.
 
